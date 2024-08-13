@@ -39,19 +39,36 @@ function updateTime() {
 function updateCity(event) {
   let cityTimeZone = event.target.value;
   let cityName = cityTimeZone.replace("_", " ").split("/")[1];
-  console.log(cityTimeZone);
-  let cityTime = moment().tz(cityTimeZone);
-  console.log(cityTime.format("MMMM Do YYYY"));
+  let cityId = cityName.replace(" ", "-");
   let CitiesElement = document.querySelector("#cities");
-  CitiesElement.innerHTML = `<div class="city" id="${cityName}">
+
+  if (document.querySelector(`#${cityId}`)) {
+    return;
+  }
+
+  CitiesElement.innerHTML += `<div class="city" id="${cityId}">
       <div>
         <h2>${cityName}</h2>
-        <div class="date">${cityTime.format("MMMM Do YYYY")}</div>
+        <div class="date"></div>
       </div>
-      <div class="time">${cityTime.format("h:mm:ss")}
-        <small>${cityTime.format("A")}</small>
+      <div class="time">
+        <small></small>
       </div>
     </div>`;
+
+  function updateNewTime() {
+    let cityTime = moment().tz(cityTimeZone);
+    let cityElement = document.querySelector(`#${cityId}`);
+    cityElement.querySelector(".date").innerHTML =
+      cityTime.format("MMMM Do YYYY");
+    cityElement.querySelector(".time").innerHTML = `${cityTime.format(
+      "h:mm:ss"
+    )} <small>${cityTime.format("A")}</small>`;
+  }
+
+  updateNewTime();
+
+  setInterval(updateNewTime, 995);
 }
 
 setInterval(updateTime, 1000);
